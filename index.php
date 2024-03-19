@@ -29,12 +29,15 @@ try {
     $sastojciData = $sastojci->findAll();
     $receptSastojciData = $receptSastojci->findAll(); // Fetch data from recept_sastojci table
 
-    $receptSastojciDataX = array();
-    foreach ($receptSastojciData as $row) {
-        $receptSastojciDataX[$row['id']] = $row['naziv'];
+    $receptDataX= array();
+    foreach ($receptData as $row) {
+        $receptDataX[$row['id']] = $row['naziv'];
     }
 
-
+    $sastojciDataX= array();
+    foreach ($sastojciData as $row) {
+        $sastojciDataX[$row['id']] = $row['naziv'];
+    }
 
 } catch(PDOException $e) {
     echo "Connection failed: " . $e->getMessage();
@@ -103,6 +106,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     elseif (isset($_POST['prepare_recipe'])) {
         $x = new ReceptSastojci($pdo);
         $receptSastojci->save(1, 1, "30");
+        //$x = new ReceptSastojci($pdo)
+        //$x->save(1, 1, 50);
+        // Redirect to the same page using POST method
+        header('Location: ' . $_SERVER['PHP_SELF'], true, 303);
+        exit();
+    }
+
+    //insert_recept_sastojci
+    elseif (isset($_POST['insert_recept_sastojci'])) {
+        $x = new ReceptSastojci($pdo);
+        $receptSastojci->save($_POST['naziv'], $_POST['naziv'], $_POST['kolicina_sastojci']);
         //$x = new ReceptSastojci($pdo)
         //$x->save(1, 1, 50);
         // Redirect to the same page using POST method
@@ -284,10 +298,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <h2>Recept Sastojci Table</h2>
         <select name="recept_id">
             <option value="">Select a Recept</option>
-            <?php foreach ($receptSastojciDataX as $id => $naziv): ?>
+            <?php foreach ($receptDataX as $id => $naziv): ?>
                 <option value="<?php echo $id; ?>"><?php echo $naziv; ?></option>
             <?php endforeach; ?>
         </select>
+
+        <select name="sastojci_id">
+            <option value="">Select sastojci</option>
+            <?php foreach ($sastojciDataX as $id => $naziv): ?>
+                <option value="<?php echo $id; ?>"><?php echo $naziv; ?></option>
+            <?php endforeach; ?>
+        </select>
+        <input type="text" name="kolicina_sastojci" id="kolicina_sastojci" placeholder="Količina">
+        <button type="submit" name="insert_recept_sastojci">Insert into recept sastojci</button>
+
     <table>
         <thead>
             <tr>
@@ -308,5 +332,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </table>
 
 </div>
+
+<script>
+    // Add the JavaScript code here
+    var receptDropdown = document.querySelector('select[name="recept_id"]');
+    var sastojciDropdown = document.querySelector('select[name="sastojci_id"]');
+
+    receptDropdown.addEventListener('change', function() {
+        var selectedReceptId = receptDropdown.value;
+        // Use the selectedReceptId as needed
+    });
+
+    sastojciDropdown.addEventListener('change', function() {
+        var selectedSastojciId = sastojciDropdown.value;
+        // Use the selectedSastojciId as needed
+    });
+</script>
 </body>
 </html>
