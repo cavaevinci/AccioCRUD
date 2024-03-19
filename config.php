@@ -37,7 +37,7 @@ try {
         PDO::ATTR_EMULATE_PREPARES   => false,
     ];
     $db = new PDO($dsn, $username, $password, $options);
-    echo "Connected successfully";
+    //echo "Connected successfully";
 } catch (PDOException $e) {
     // If connection fails, handle the error
     echo "Connection failed: " . $e->getMessage();
