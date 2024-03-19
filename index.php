@@ -92,6 +92,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         header('Location: ' . $_SERVER['PHP_SELF'], true, 303);
         exit();
     }
+    //prepare recipe
+    elseif (isset($_POST['prepare_recipe'])) {
+        
+        
+        // Redirect to the same page using POST method
+        header('Location: ' . $_SERVER['PHP_SELF'], true, 303);
+        exit();
+    }
 }
 
 ?>
@@ -209,6 +217,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <th>ID</th>
                 <th>Naziv</th>
                 <th>Vrijeme Pripreme</th>
+                <th>Akcija</th>
             </tr>
         </thead>
         <tbody>
@@ -217,6 +226,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <td><?php echo $row['id']; ?></td>
                 <td><?php echo $row['naziv']; ?></td>
                 <td><?php echo $row['vrijeme_pripreme']; ?></td>
+                <td> 
+                    <form method="post" action="">
+                    <input type="hidden" name="recipe_id" value="<?php echo $row['id']; ?>">
+                    <button type="submit" name="prepare_recipe">Prepare</button>
+                    </form>
+                </td>
             </tr>
             <?php endforeach; ?>
         </tbody>
