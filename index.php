@@ -29,6 +29,13 @@ try {
     $sastojciData = $sastojci->findAll();
     $receptSastojciData = $receptSastojci->findAll(); // Fetch data from recept_sastojci table
 
+    $receptSastojciDataX = array();
+    foreach ($receptSastojciData as $row) {
+        $receptSastojciDataX[$row['id']] = $row['naziv'];
+    }
+
+
+
 } catch(PDOException $e) {
     echo "Connection failed: " . $e->getMessage();
 }
@@ -92,10 +99,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         header('Location: ' . $_SERVER['PHP_SELF'], true, 303);
         exit();
     }
-    //prepare recipe
+    //add recipe sastojci hardcoded
     elseif (isset($_POST['prepare_recipe'])) {
-        
-        
+        $x = new ReceptSastojci($pdo);
+        $receptSastojci->save(1, 1, "30");
+        //$x = new ReceptSastojci($pdo)
+        //$x->save(1, 1, 50);
         // Redirect to the same page using POST method
         header('Location: ' . $_SERVER['PHP_SELF'], true, 303);
         exit();
@@ -273,6 +282,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </table>
 
     <h2>Recept Sastojci Table</h2>
+        <select name="recept_id">
+            <option value="">Select a Recept</option>
+            <?php foreach ($receptSastojciDataX as $id => $naziv): ?>
+                <option value="<?php echo $id; ?>"><?php echo $naziv; ?></option>
+            <?php endforeach; ?>
+        </select>
     <table>
         <thead>
             <tr>
