@@ -37,36 +37,60 @@ try {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Process Narudzba form data
     if (isset($_POST['add_narudzba'])) {
-        $narudzba = new Narudzba($pdo);
-        $vrijeme_upita = $_POST['vrijeme_upita'];
-        if ($narudzba->save($vrijeme_upita)) {
-            $narudzbaMsg = "Narudzba added successfully.";
+        // Check if any form fields are empty
+        if (empty($_POST['vrijeme_upita'])) {
+            $narudzbaError = "Please fill in all form fields.";
         } else {
-            $narudzbaError = "Error adding Narudzba.";
+            $narudzba = new Narudzba($pdo);
+            $vrijeme_upita = $_POST['vrijeme_upita'];
+            if ($narudzba->save($vrijeme_upita)) {
+                $narudzbaMsg = "Narudzba added successfully.";
+            } else {
+                $narudzbaError = "Error adding Narudzba.";
+            }
         }
+        // Redirect to the same page using POST method
+        // Firefox submission reload issue fix
+        header('Location: ' . $_SERVER['PHP_SELF'], true, 303);
+        exit();
     }
     // Process Recept form data
     elseif (isset($_POST['add_recept'])) {
-        $recept = new Recept($pdo);
-        $naziv = $_POST['naziv'];
-        $vrijeme_pripreme = $_POST['vrijeme_pripreme'];
-        if ($recept->save($naziv, $vrijeme_pripreme)) {
-            $receptMsg = "Recept added successfully.";
+        if (empty($_POST['vrijeme_pripreme']) && empty($_POST['naziv'])) {
+            $narudzbaError = "Please fill in all form fields.";
         } else {
-            $receptError = "Error adding Recept.";
+            $recept = new Recept($pdo);
+            $naziv = $_POST['naziv'];
+            $vrijeme_pripreme = $_POST['vrijeme_pripreme'];
+            if ($recept->save($naziv, $vrijeme_pripreme)) {
+                $receptMsg = "Recept added successfully.";
+            } else {
+                $receptError = "Error adding Recept.";
+            }
         }
+        // Redirect to the same page using POST method
+        // Firefox submission reload issue fix
+        header('Location: ' . $_SERVER['PHP_SELF'], true, 303);
+        exit();
     }
     // Process Sastojci form data
     elseif (isset($_POST['add_sastojci'])) {
-        $sastojci = new Sastojci($pdo);
-        $naziv = $_POST['naziv'];
-        $kolicina = $_POST['kolicina'];
-        $mjerna_jedinica = $_POST['mjerna_jedinica'];
-        if ($sastojci->save($naziv, $kolicina, $mjerna_jedinica)) {
-            $sastojciMsg = "Sastojci added successfully.";
+        if (empty($_POST['naziv']) && empty($_POST['kolicina']) && empty($_POST['mjerna_jedinica'])) {
+            $narudzbaError = "Please fill in all form fields.";
         } else {
-            $sastojciError = "Error adding Sastojci.";
+            $sastojci = new Sastojci($pdo);
+            $naziv = $_POST['naziv'];
+            $kolicina = $_POST['kolicina'];
+            $mjerna_jedinica = $_POST['mjerna_jedinica'];
+            if ($sastojci->save($naziv, $kolicina, $mjerna_jedinica)) {
+                $sastojciMsg = "Sastojci added successfully.";
+            } else {
+                $sastojciError = "Error adding Sastojci.";
+            }
         }
+        // Redirect to the same page using POST method
+        header('Location: ' . $_SERVER['PHP_SELF'], true, 303);
+        exit();
     }
 }
 
